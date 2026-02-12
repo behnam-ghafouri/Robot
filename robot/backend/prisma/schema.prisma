@@ -1,0 +1,25 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Robot {
+  id     Int    @id @default(1)
+  x      Int
+  y      Int
+  facing String
+}
+
+model History {
+  id        Int      @id @default(autoincrement())
+  x         Int
+  y         Int
+  facing    String
+  createdAt DateTime @default(now())
+}
