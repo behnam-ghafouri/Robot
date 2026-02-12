@@ -18,7 +18,18 @@ export class AppService {
 
 
   async getRobotState() {
-    return await this.prisma.robot.findUnique({ where: { id: 1 } });
+    let current = await this.prisma.robot.findUnique({ where: { id: 1 } });
+    if (!current) {
+      const pos = { x: 0, y: 0, facing: 'NORTH' };
+      const robot = await this.prisma.robot.upsert({
+        where: { id: 1 },
+        update: pos,
+        create: { id: 1, ...pos }
+      })
+      await this.prisma.history.create({ data: pos });
+    }
+    current = await this.prisma.robot.findUnique({ where: { id: 1 } });
+    return current;
   }
 
   async place(x: number, y: number, facing: string) {
@@ -81,3 +92,4 @@ export class AppService {
   }
 
 }
+
